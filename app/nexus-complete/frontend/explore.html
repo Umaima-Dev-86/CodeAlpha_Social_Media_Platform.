@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Discovery — NEXUS</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .nexus-modal {
+            position: fixed; inset: 0; background: rgba(4,4,7,0.95);
+            backdrop-filter: blur(16px); z-index: 2000; display: none;
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-content-card {
+            background: var(--bg-surface); border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg); width: 100%; max-width: 520px;
+            padding: 24px; position: relative; box-shadow: var(--shadow-premium);
+        }
+        .close-modal {
+            position: absolute; top: 16px; right: 20px; font-size: 1.5rem;
+            color: var(--text-muted); cursor: pointer; transition: var(--transition-smooth);
+        }
+        .close-modal:hover { color: var(--neon-pink); }
+        .grid-preview-img { width: 100%; max-height: 400px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+        .category-pill { cursor: pointer; transition: var(--transition-smooth); }
+        .category-pill.active { background: var(--brand-linear) !important; color: #000 !important; }
+        .followed-btn { background: rgba(255,255,255,0.1) !important; color: var(--text-silver) !important; border: 1px solid var(--border-color) !important; }
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand-logo">NEXUS</div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="feed.html"><i class="fa-solid fa-satellite-dish"></i> <span>Global Feed</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a href="explore.html"><i class="fa-solid fa-bolt" style="color: var(--neon-pink);"></i> <span>Explore Hub</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html"><i class="fa-solid fa-shield-halved"></i> <span>Profile Vault</span></a>
+                </li>
+                <li class="nav-item" style="margin-top: auto;">
+                    <a href="index.html" style="color: var(--neon-orange);"><i class="fa-solid fa-power-off"></i> <span>Disconnect</span></a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="create-post-box" style="padding: 14px 20px;">
+                <input type="text" id="search-matrix" oninput="filterGridData()" placeholder="🔍 Search through global vector databases..." style="width:100%; background:transparent; border:none; color:var(--text-main); font-size:1.05rem; outline:none; font-weight:500;">
+            </div>
+
+            <div style="display:flex; gap:10px; margin-bottom:24px; overflow-x:auto;" id="category-box">
+                <span class="tag-pill category-pill active" onclick="switchCategory(this, 'all')">All Matrix Feed</span>
+                <span class="tag-pill category-pill" onclick="switchCategory(this, 'tech')">#Architecture</span>
+                <span class="tag-pill category-pill" onclick="switchCategory(this, 'design')">#DesignSystems</span>
+                <span class="tag-pill category-pill" onclick="switchCategory(this, 'neon')">#NeonVibes</span>
+            </div>
+
+            <h3 style="font-weight:700; margin-bottom:16px;" id="grid-header">Trending Global Visuals</h3>
+
+            <div class="explore-grid" id="discovery-grid">
+                <div class="explore-tile" data-type="tech" onclick="openMediaLightbox('Cosmic Terminal Vectors', 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600', '42k', '890')">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400">
+                    <div class="tile-overlay"><i class="fa-solid fa-heart"></i> 42k</div>
+                </div>
+                <div class="explore-tile" data-type="tech" onclick="openMediaLightbox('Quantum Circuit Grid Topology', 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600', '19k', '312')">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=400">
+                    <div class="tile-overlay"><i class="fa-solid fa-heart"></i> 19k</div>
+                </div>
+                <div class="explore-tile" data-type="design" onclick="openMediaLightbox('Advanced HUD Interface Draft', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600', '55k', '1.4k')">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400">
+                    <div class="tile-overlay"><i class="fa-solid fa-heart"></i> 55k</div>
+                </div>
+                <div class="explore-tile" data-type="design" onclick="openMediaLightbox('Fluid Workspace Setup V2', 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600', '31k', '740')">
+                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400">
+                    <div class="tile-overlay"><i class="fa-solid fa-heart"></i> 31k</div>
+                </div>
+                <div class="explore-tile" data-type="neon" onclick="openMediaLightbox('Shibuya Night Overdrive', 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600', '88k', '3.1k')">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400">
+                    <div class="tile-overlay"><i class="fa-solid fa-heart"></i> 88k</div>
+                </div>
+                <div class="explore-tile" data-type="neon" onclick="openMediaLightbox('Cyber Encryption Nodes View', 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600', '12k', '190')">
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400">
+                    <div class="tile-overlay"><i class="fa-solid fa-heart"></i> 12k</div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="right-panel">
+            <div class="widget-card">
+                <h3 class="widget-title"><i class="fa-solid fa-user-check" style="color: var(--neon-cyan);"></i> Fast Connect</h3>
+                <div class="user-row">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" class="avatar" style="width:38px; height:38px; border-color:var(--neon-green);">
+                        <div>
+                            <h5 style="color: var(--text-main);">Elena Rostova</h5>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">@elena_ux</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="toggleFollow(this)">Follow</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div class="nexus-modal" id="mediaModal">
+        <div class="modal-content-card">
+            <span class="close-modal" onclick="document.getElementById('mediaModal').style.display='none'">&times;</span>
+            <h4 id="lightbox-title" style="color:var(--neon-cyan); margin-bottom:12px;">Media Terminal</h4>
+            <img id="lightbox-img" src="" class="grid-preview-img">
+            <div style="display:flex; gap:20px; margin-top:14px; color:var(--text-silver); font-weight:700;">
+                <span><i class="fa-solid fa-heart" style="color:var(--neon-pink); margin-right:6px;"></i><span id="lightbox-likes">0</span></span>
+                <span><i class="fa-solid fa-message" style="color:var(--neon-cyan); margin-right:6px;"></i><span id="lightbox-comments">0</span></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchCategory(pill, type) {
+            document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            
+            document.querySelectorAll('.explore-tile').forEach(tile => {
+                if(type === 'all' || tile.getAttribute('data-type') === type) {
+                    tile.style.display = 'block';
+                } else {
+                    tile.style.display = 'none';
+                }
+            });
+        }
+
+        function openMediaLightbox(title, src, likes, comments) {
+            document.getElementById('lightbox-title').innerText = title;
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-likes').innerText = likes;
+            document.getElementById('lightbox-comments').innerText = comments;
+            document.getElementById('mediaModal').style.display = 'flex';
+        }
+
+        function toggleFollow(btn) {
+            if(!btn.classList.contains('followed-btn')) {
+                btn.classList.add('followed-btn');
+                btn.innerText = "✓ Connected";
+            } else {
+                btn.classList.remove('followed-btn');
+                btn.innerText = "Follow";
+            }
+        }
+
+        function filterGridData() {
+            let val = document.getElementById('search-matrix').value.toLowerCase();
+            document.querySelectorAll('.explore-tile').forEach(tile => {
+                let parentAttr = tile.getAttribute('data-type');
+                if(parentAttr.includes(val)) { tile.style.style.display = 'block'; }
+            });
+        }
+    </script>
+</body>
+</html>

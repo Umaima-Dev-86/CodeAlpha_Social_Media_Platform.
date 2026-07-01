@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS VIP — High-Fidelity Ecosystem</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap');
+
+        :root {
+            --bg-main: #020204;
+            --bg-surface: #07080d;
+            --bg-card: #0f111a;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --brand-linear: linear-gradient(135deg, #ff0055 0%, #7b2cbf 50%, #00f5d4 100%);
+            --story-gradient: linear-gradient(45deg, #ff0055, #7b2cbf, #00f5d4, #ffee32);
+            --vortex-gradient: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.85) 100%);
+            
+            --neon-pink: #ff0055;
+            --neon-cyan: #00f5d4;
+            --neon-purple: #9d4edd;
+            --neon-yellow: #ffb703;
+            
+            --text-main: #f8fafc;
+            --text-muted: #475569;
+            --text-silver: #cbd5e1;
+            
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-full: 50%;
+            --shadow-premium: 0 25px 50px -12px rgba(0,0,0,0.7);
+            --transition-smooth: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; }
+
+        .app-layout {
+            display: grid; grid-template-columns: 260px 1fr 380px;
+            max-width: 1650px; margin: 0 auto; gap: 24px; padding: 20px;
+        }
+
+        /* 🧭 SIDEBAR PANEL */
+        .sidebar { position: sticky; top: 20px; height: calc(100vh - 40px); display: flex; flex-direction: column; justify-content: space-between; }
+        .brand-logo { font-family: 'Space Grotesk', sans-serif; font-size: 2.4rem; font-weight: 700; background: var(--brand-linear); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 24px; cursor: pointer; letter-spacing: -2px; }
+        .nav-menu { list-style: none; }
+        .nav-item { margin-bottom: 4px; }
+        .nav-item a { display: flex; align-items: center; gap: 14px; color: var(--text-silver); text-decoration: none; padding: 12px 16px; border-radius: var(--radius-md); font-weight: 700; transition: var(--transition-smooth); cursor: pointer; border: 1px solid transparent; }
+        .nav-item.active a, .nav-item a:hover { color: var(--text-main); background: var(--bg-surface); border: 1px solid var(--border-color); box-shadow: var(--shadow-premium); }
+
+        /* 🪐 RUNTIME APP WINDOW PANELS */
+        .app-section { display: none; animation: viewFadeIn 0.25s linear; }
+        .app-section.active-view { display: block; }
+        @keyframes viewFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 📸 COMPACT CLASSIC STORIES OVERLAY */
+        .stories-wrapper { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 20px; }
+        .stories-container { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 2px; }
+        .stories-container::-webkit-scrollbar { display: none; }
+        .story-node { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; min-width: 68px; text-align: center; }
+        .story-ring { width: 64px; height: 64px; border-radius: var(--radius-full); padding: 2.5px; background: var(--story-gradient); display: flex; align-items: center; justify-content: center; }
+        .story-node:hover .story-ring { transform: scale(1.04); }
+        .story-img { width: 100%; height: 100%; border-radius: var(--radius-full); object-fit: cover; border: 2.5px solid var(--bg-surface); }
+        .story-node span { font-size: 0.7rem; color: var(--text-silver); font-weight: 600; max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* 🎥 VORTEX DYNAMIC CLIPS */
+        .vortex-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 20px; }
+        .vortex-container::-webkit-scrollbar { display: none; }
+        .vortex-clip { min-width: 115px; height: 185px; border-radius: var(--radius-md); overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--border-color); }
+        .vortex-clip img { width: 100%; height: 100%; object-fit: cover; }
+        .vortex-meta { position: absolute; inset: 0; background: var(--vortex-gradient); display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; }
+        .vortex-meta span { font-size: 0.7rem; font-weight: 700; color: #fff; }
+
+        /* 📝 INTERACTION DISPLAY CORE LAYOUTS */
+        .create-post-box { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 20px; }
+        .create-post-box textarea { width: 100%; background: transparent; border: none; resize: none; color: var(--text-main); font-size: 1rem; outline: none; }
+        
+        .post-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px; }
+        .post-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .avatar { width: 46px; height: 46px; border-radius: var(--radius-full); object-fit: cover; }
+        .post-body-content { font-size: 1rem; color: #e2e8f0; margin-bottom: 12px; line-height: 1.5; }
+        .post-image-attachment { width: 100%; max-height: 480px; object-fit: cover; border-radius: var(--radius-md); margin-bottom: 12px; border: 1px solid var(--border-color); }
+        
+        .interaction-bar { display: flex; justify-content: space-between; border-top: 1px solid var(--border-color); padding-top: 12px; }
+        .interaction-btn { background: transparent; border: none; color: var(--text-silver); cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.9rem; }
+        .liked-active { color: var(--neon-pink) !important; }
+        .bookmarked-active { color: var(--neon-cyan) !important; }
+
+        /* 👥 EXPANSIVE EXTRA SIDEBAR DESIGN */
+        .right-panel { position: sticky; top: 20px; height: calc(100vh - 40px); overflow-y: auto; padding-right: 4px; }
+        .right-panel::-webkit-scrollbar { width: 4px; }
+        .right-panel::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        .widget-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 20px; }
+        .widget-title { font-size: 1rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .user-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.01); padding-bottom: 8px; }
+        
+        .btn-primary { background: var(--brand-linear); color: #000; border: none; padding: 8px 14px; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; transition: var(--transition-smooth); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,0,85,0.25); }
+        .followed-state { background: rgba(255, 255, 255, 0.05) !important; color: var(--text-silver) !important; }
+
+        /* 🔍 TILES MASONRY MATRIX */
+        .explore-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+        .explore-tile { position: relative; aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; cursor: pointer; border: 1px solid var(--border-color); }
+        .explore-tile img { width: 100%; height: 100%; object-fit: cover; }
+        .tile-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: var(--transition-smooth); font-weight: 700; }
+        .explore-tile:hover .tile-overlay { opacity: 1; }
+
+        /* 🔔 SYSTEM ALERT PLATES */
+        .notification-item { background: var(--bg-surface); border-left: 3px solid var(--neon-pink); padding: 14px; border-radius: var(--radius-md); margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+
+        /* 🪐 IMMERSIVE VIEWER BLOCK */
+        .nexus-lightbox { position: fixed; inset: 0; background: rgba(2,2,4,0.98); backdrop-filter: blur(24px); z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .lightbox-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); width: 100%; max-width: 520px; padding: 22px; position: relative; }
+        .close-btn { position: absolute; top: 14px; right: 18px; font-size: 1.6rem; color: var(--text-muted); cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div>
+                <div class="brand-logo" onclick="switchTab('feed-section')">NEXUS</div>
+                <ul class="nav-menu">
+                    <li class="nav-item active" id="nav-feed">
+                        <a onclick="switchTab('feed-section')"><i class="fa-solid fa-home" style="color: var(--neon-pink);"></i> <span>Global Feed</span></a>
+                    </li>
+                    <li class="nav-item" id="nav-explore">
+                        <a onclick="switchTab('explore-section')"><i class="fa-solid fa-compass" style="color: var(--neon-cyan);"></i> <span>Explore Niche</span></a>
+                    </li>
+                    <li class="nav-item" id="nav-alerts">
+                        <a onclick="switchTab('alerts-section')"><i class="fa-solid fa-bell" style="color: var(--neon-purple);"></i> <span>Alerts Dock</span></a>
+                    </li>
+                    <li class="nav-item" id="nav-bookmarks">
+                        <a onclick="switchTab('bookmarks-section')"><i class="fa-solid fa-bookmark" style="color: #ff5e00;"></i> <span>Saved Folders</span></a>
+                    </li>
+                    <li class="nav-item" id="nav-profile">
+                        <a onclick="switchTab('profile-section')"><i class="fa-solid fa-crown" style="color: #00e676;"></i> <span>Profile Vault</span></a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            
+            <section id="feed-section" class="app-section active-view">
+                <div class="stories-wrapper">
+                    <div class="stories-container" id="dynamic-classic-stories-list"></div>
+                </div>
+                
+                <h4 style="margin-bottom:12px; font-weight:800; font-size:1.1rem; color: var(--text-silver);">Vortex Streams Channel</h4>
+                <div class="vortex-container" id="vortex-video-clips-list"></div>
+
+                <div class="create-post-box">
+                    <textarea id="live-broadcast-text" placeholder="Share your latest luxury lifestyle moment or recipe, Umaima..." rows="2"></textarea>
+                    <div style="display:flex; justify-content:space-between; margin-top:10px; align-items:center;">
+                        <span style="color:var(--text-muted); font-size:0.8rem;"><i class="fa-solid fa-earth-americas"></i> Public Matrix Feed</span>
+                        <button class="btn-primary" onclick="publishBroadcastLive()">Post Stream 🚀</button>
+                    </div>
+                </div>
+                <div id="feed-stream-cards"></div>
+            </section>
+
+            <section id="explore-section" class="app-section">
+                <div class="create-post-box" style="padding:12px 16px; display:flex; align-items:center; gap:12px;">
+                    <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted);"></i>
+                    <input type="text" id="explore-search" oninput="runExploreSearch()" placeholder="Filter through 50+ aesthetic categories..." style="width:100%; background:transparent; border:none; color:#fff; outline:none;">
+                </div>
+                <div style="display:flex; gap:6px; margin-bottom:14px;">
+                    <button class="btn-primary" style="padding:4px 10px; font-size:0.75rem;" onclick="filterExploreMatrix('all')">All Matrix</button>
+                    <button class="btn-primary followed-state" style="padding:4px 10px; font-size:0.75rem;" onclick="filterExploreMatrix('fashion')">Fashion</button>
+                    <button class="btn-primary followed-state" style="padding:4px 10px; font-size:0.75rem;" onclick="filterExploreMatrix('nature')">Nature</button>
+                    <button class="btn-primary followed-state" style="padding:4px 10px; font-size:0.75rem;" onclick="filterExploreMatrix('food')">Food</button>
+                </div>
+                <div class="explore-grid" id="explore-tiles-container"></div>
+            </section>
+
+            <section id="alerts-section" class="app-section">
+                <h2 style="font-weight:800; margin-bottom:14px; font-size:1.4rem;">Alert Dashboard Logs</h2>
+                <div id="notifications-log-wrapper"></div>
+            </section>
+
+            <section id="bookmarks-section" class="app-section">
+                <h2 style="font-weight:800; margin-bottom:14px; font-size:1.4rem;">Saved Vault Storage</h2>
+                <div id="bookmarks-cards-wrapper"></div>
+            </section>
+
+            <section id="profile-section" class="app-section">
+                <div class="post-card" style="text-align: center; padding: 30px 16px; background: radial-gradient(circle at top right, rgba(255,0,85,0.02), transparent), var(--bg-surface);">
+                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200" class="avatar" style="width: 100px; height: 100px; margin: 0 auto 12px auto; border: 3px solid var(--neon-pink);">
+                    <h2 style="font-weight: 800; font-size:1.5rem;" id="my-profile-name">Umaima Raj <i class="fa-solid fa-circle-check" style="color:var(--neon-pink);"></i></h2>
+                    <p style="color: var(--neon-cyan); font-weight:700; margin-bottom:8px; font-size:0.9rem;">@umaima_luxury</p>
+                    <p id="my-profile-bio" style="color: var(--text-silver); font-size:0.9rem; margin-bottom:16px;">Creative Director & Curator | Architecture, Editorial Lines, Haute Couture Lines, and Travel Logs.</p>
+                    <button class="btn-primary" style="padding:4px 12px; font-size:0.8rem;" onclick="editMyIdentity()">Modify System Signature</button>
+                    
+                    <div style="display: flex; justify-content: center; gap: 30px; border-top:1px solid var(--border-color); padding-top:14px; margin-top:14px;">
+                        <div><h4 style="color: var(--text-main);" id="my-nodes-count">50</h4><span style="color: var(--text-muted); font-size:0.7rem; font-weight:700;">POSTS</span></div>
+                        <div><h4 style="color: var(--text-main);">1.2k</h4><span style="color: var(--text-muted); font-size:0.7rem; font-weight:700;">FOLLOWERS</span></div>
+                        <div><h4 style="color: var(--text-main);" id="my-following-counter">240</h4><span style="color: var(--text-muted); font-size:0.7rem; font-weight:700;">FOLLOWING</span></div>
+                    </div>
+                </div>
+                <h3 style="margin-bottom:12px; font-weight:700; font-size:1.1rem;">Your Verified Timeline Logs</h3>
+                <div id="my-personal-posts"></div>
+            </section>
+        </div>
+
+        <aside class="right-panel">
+            <div class="widget-card">
+                <h4 class="widget-title"><i class="fa-solid fa-user-plus" style="color: var(--neon-pink);"></i> Follow Suggestions</h4>
+                <div id="sidebar-creators-list"></div>
+            </div>
+        </aside>
+    </div>
+
+    <div class="nexus-lightbox" id="global-modal-viewer">
+        <div class="lightbox-card">
+            <span class="close-btn" onclick="shutDownViewer()">&times;</span>
+            <h3 id="modal-content-header" style="margin-bottom:10px; color:var(--neon-pink); font-size:1.1rem;">System Core Log</h3>
+            <img id="modal-content-media" src="" style="width:100%; max-height:380px; object-fit:cover; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+            <p id="modal-content-bio" style="color:var(--text-silver); margin-top:12px; font-size:0.9rem; line-height:1.4; text-align:left;"></p>
+        </div>
+    </div>
+
+    <script>
+        const heavyCreatorsData = [
+            { id: 'c1', name: 'Alessia Rossi', handle: '@alessia_milan', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', bio: 'Haute Couture Director based out of Milan.', isFollowed: false },
+            { id: 'c2', name: 'Julien Mercier', handle: '@julien_paris', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', bio: 'Monochrome lifestyle street archivist in Paris.', isFollowed: false },
+            { id: 'c3', name: 'Elena Rostova', handle: '@elena_travels', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150', bio: 'Nordic wilderness & aesthetic landscape curation.', isFollowed: false },
+            { id: 'c4', name: 'Chef Kenji', handle: '@kenji_michelin', avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150', bio: 'Tokyo avant-garde gourmet pastry specialist.', isFollowed: false },
+            { id: 'c5', name: 'Amara Vance', handle: '@amara_vogue', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150', bio: 'Luxury visual architecture lines model designer.', isFollowed: false },
+            { id: 'c6', name: 'Liam Sterling', handle: '@liam_minimal', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', bio: 'Minimalist architecture developer based in London.', isFollowed: false },
+            { id: 'c7', name: 'Chloe Dubois', handle: '@chloe_vibe', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150', bio: 'Cozy cafes and urban design lifestyle cataloguer.', isFollowed: false },
+            { id: 'c8', name: 'Marcus Aurelius', handle: '@marcus_escape', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150', bio: 'Chasing sunsets across Mediterranean yacht lines.', isFollowed: false },
+            { id: 'c9', name: 'Sienna Brooks', handle: '@sienna_style', avatar: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=150', bio: 'Earth-tone aesthetic lookbook architecture builder.', isFollowed: false },
+            { id: 'c10', name: 'Zayan Malik', handle: '@zayan_taste', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150', bio: 'Gourmet review matrix and luxury restaurant logs.', isFollowed: false },
+            { id: 'c11', name: 'Nina Simone', handle: '@nina_nature', avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150', bio: 'Alpine escape mapping and geographic visual fields.', isFollowed: false },
+            { id: 'c12', name: 'Oliver Twist', handle: '@oliver_lux', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150', bio: 'Premium automotive design and styling lines editor.', isFollowed: false },
+            { id: 'c13', name: 'Freja Beha', handle: '@freja_runway', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150', bio: 'Runway insights direct from New York fashion logs.', isFollowed: false },
+            { id: 'c14', name: 'Dante Alighieri', handle: '@dante_plates', avatar: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=150', bio: 'Wood-fired gourmet compilation designer.', isFollowed: false },
+            { id: 'c15', name: 'Aria Montgomery', handle: '@aria_travel', avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=150', bio: 'Island resort photography and luxury travel vlogs.', isFollowed: false }
+        ];
+
+        const rawUniqueImages = [
+            "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600", "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600",
+            "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600", "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=600",
+            "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600", "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600",
+            "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600", "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600",
+            "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?w=600", "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600",
+            "https://images.unsplash.com/photo-1505022610485-0249ba5b3675?w=600", "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600",
+            "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=600", "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600",
+            "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600", "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600",
+            "https://images.unsplash.com/photo-1472214222541-d510753a8707?w=600", "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600",
+            "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600", "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600",
+            "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=600", "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=600",
+            "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600", "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600",
+            "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600", "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=600",
+            "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600", "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600",
+            "https://images.unsplash.com/photo-1493770348161-369560ae357d?w=600", "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600",
+            "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600", "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600",
+            "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600", "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600",
+            "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600", "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600",
+            "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600", "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600",
+            "https://images.unsplash.com/photo-1528127269322-539801943592?w=600", "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600"
+        ];
+
+        const textualDescriptions = [
+            "Chasing pristine morning shadows. Lookbook contours are beautifully fluid and simple.",
+            "Minimalist earth tones mixed with clean structural lines. Elegance lives in detail.",
+            "Waking up to foggy panoramic vistas. High altitude clean oxygen hits differently today.",
+            "Artisanal culinary assembly inside the testing kitchen deck. Wild berry reductions match perfectly.",
+            "Aesthetic evening walk through old European cobblestone lanes. Textures are absolutely breathtaking."
+        ];
+
+        function getDb(k, fb) { let r = localStorage.getItem(k); return r ? JSON.parse(r) : fb; }
+        function setDb(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+        let activeCreators = getDb('nx_v9_creators', heavyCreatorsData);
+        let activeFollowingCount = getDb('nx_v9_fcount', 240);
+        let activeProfile = getDb('nx_v9_profile', { name: "Umaima Raj", bio: "Creative Director & Global Lifestyle Curator | Mapping high-end fashion lines, gourmet explorations, and nature escapes." });
+        let activeCustomPosts = getDb('nx_v9_custom', []);
+        let activeBookmarks = getDb('nx_v9_bookmarks', []);
+
+        let masterFeedArray = [];
+        let systemAlertLogs = [
+            { icon: "fa-heart", text: "Alessia Rossi and 42 others liked your autumn lookbook post." },
+            { icon: "fa-user-plus", text: "Julien Mercier followed your profile network signature update." }
+        ];
+
+        function compileDatabasePipes() {
+            masterFeedArray = [...activeCustomPosts];
+
+            for (let i = 1; i <= 55; i++) {
+                let creator = activeCreators[i % activeCreators.length];
+                let imgAsset = rawUniqueImages[i % rawUniqueImages.length];
+                let textAsset = textualDescriptions[i % textualDescriptions.length];
+                
+                let category = 'lifestyle';
+                if(i % 3 === 0) category = 'fashion';
+                if(i % 3 === 1) category = 'nature';
+                if(i % 3 === 2) category = 'food';
+
+                masterFeedArray.push({
+                    id: `node_id_v9_${i}`,
+                    category: category,
+                    user: creator,
+                    text: `[Registry Log #${i}] ${textAsset}`,
+                    img: imgAsset,
+                    tags: [`#${category.toUpperCase()}`, `#VibeCluster_${i}`],
+                    likes: Math.floor(Math.random() * 300) + 80,
+                    isLiked: false,
+                    isBookmarked: activeBookmarks.some(b => b.id === `node_id_v9_${i}`)
+                });
+            }
+        }
+
+        function renderApplicationDOM(filter = 'all') {
+            document.getElementById('my-profile-name').innerHTML = `${activeProfile.name} <i class="fa-solid fa-circle-check" style="color:var(--neon-pink);"></i>`;
+            document.getElementById('my-profile-bio').innerText = activeProfile.bio;
+            document.getElementById('my-following-counter').innerText = activeFollowingCount;
+            document.getElementById('my-nodes-count').innerText = 55 + activeCustomPosts.length;
+
+            // Render Classic Stories
+            let storyHtml = '';
+            activeCreators.forEach((user, index) => {
+                let specificPostIndex = (index + 4) % masterFeedArray.length;
+                let targetPost = masterFeedArray[specificPostIndex] || masterFeedArray[0];
+                
+                storyHtml += `
+                    <div class="story-node" onclick="triggerStoryPostView('${user.name}', '${targetPost.img}', '${targetPost.text}')">
+                        <div class="story-ring"><img src="${user.avatar}" class="story-img"></div>
+                        <span>${user.handle}</span>
+                    </div>`;
+            });
+            document.getElementById('dynamic-classic-stories-list').innerHTML = storyHtml;
+
+            // Render Vortex Video Loops
+            let vortexHtml = '';
+            for(let v = 1; v <= 8; v++) {
+                let img = rawUniqueImages[(v * 3) % rawUniqueImages.length];
+                vortexHtml += `
+                    <div class="vortex-clip" onclick="triggerStoryPostView('Vortex Clip Stream #${v}', '${img}', 'Live cinematic aesthetic broadcast capture executing cleanly.')">
+                        <img src="${img}">
+                        <div class="vortex-meta"><span><i class="fa-solid fa-play"></i> ${v * 14}k</span></div>
+                    </div>`;
+            }
+            document.getElementById('vortex-video-clips-list').innerHTML = vortexHtml;
+
+            // Filter logic fix: ensures strictly lowercased matrix comparison match
+            let targetingFeeds = masterFeedArray;
+            if(filter !== 'all') {
+                targetingFeeds = masterFeedArray.filter(p => p.category.toLowerCase() === filter.toLowerCase());
+            }
+
+            // Render Global Feed
+            let feedHtml = '';
+            targetingFeeds.forEach(post => {
+                feedHtml += `
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <img src="${post.user.avatar}" class="avatar">
+                                <div>
+                                    <h4 style="cursor:pointer;" onclick="triggerProfileOverlay('${post.user.name}', '${post.user.handle}', '${post.user.avatar}', '${post.user.bio}')">${post.user.name}</h4>
+                                    <span style="font-size:0.75rem; color:var(--text-muted);">${post.user.handle}</span>
+                                </div>
+                            </div>
+                            <span style="color:var(--neon-pink); font-size:0.7rem; font-weight:800; text-transform:uppercase;">${post.category || 'GLOBAL'}</span>
+                        </div>
+                        <div class="post-body-content">
+                            ${post.text}
+                            <div>${post.tags.map(t => `<span class="tag-pill" style="color:var(--neon-cyan); margin-right:5px; font-size:0.8rem;">${t}</span>`).join('')}</div>
+                        </div>
+                        <img src="${post.img}" class="post-image-attachment" onclick="triggerStoryPostView('${post.user.name} Shared Matrix', '${post.img}', '${post.text}')" style="cursor:pointer;">
+                        <div class="interaction-bar">
+                            <button class="interaction-btn ${post.isLiked ? 'liked-active' : ''}" onclick="likePostAction('${post.id}')">
+                                <i class="fa-solid fa-heart"></i> <span>${post.likes}</span>
+                            </button>
+                            <button class="interaction-btn ${post.isBookmarked ? 'bookmarked-active' : ''}" onclick="bookmarkPostAction('${post.id}')">
+                                <i class="fa-solid fa-bookmark"></i> <span>Save Cache</span>
+                            </button>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('feed-stream-cards').innerHTML = feedHtml || `<p style="color:var(--text-muted); text-align:center; padding:20px;">No posts found in this niche segment.</p>`;
+
+            // Render Explore Masonry Matrix (Uses current targeted filtered view)
+            let exploreHtml = '';
+            targetingFeeds.forEach(post => {
+                exploreHtml += `
+                    <div class="explore-tile" data-tag-search="${post.text.toLowerCase()}" onclick="triggerStoryPostView('Explore Object Terminal', '${post.img}', '${post.text}')">
+                        <img src="${post.img}">
+                        <div class="tile-overlay"><i class="fa-solid fa-expand"></i> Inspect</div>
+                    </div>`;
+            });
+            document.getElementById('explore-tiles-container').innerHTML = exploreHtml || `<p style="color:var(--text-muted); grid-column:span 3; text-align:center; padding:20px;">No media items found.</p>`;
+
+            // Render Suggestions
+            let sideHtml = '';
+            activeCreators.forEach(user => {
+                sideHtml += `
+                    <div class="user-row">
+                        <div style="display:flex; align-items:center; gap:10px; cursor:pointer;" onclick="triggerProfileOverlay('${user.name}', '${user.handle}', '${user.avatar}', '${user.bio}')">
+                            <img src="${user.avatar}" class="avatar" style="width:34px; height:34px;">
+                            <div>
+                                <h5 style="font-size:0.85rem; font-weight:700;">${user.name}</h5>
+                                <span style="font-size:0.7rem; color:var(--text-muted);">${user.handle}</span>
+                            </div>
+                        </div>
+                        <button class="btn-primary ${user.isFollowed ? 'followed-state' : ''}" style="padding:4px 10px; font-size:0.7rem;" onclick="toggleFollowSwitch('${user.id}')">
+                            ${user.isFollowed ? '✓ Following' : 'Follow'}
+                        </button>
+                    </div>`;
+            });
+            document.getElementById('sidebar-creators-list').innerHTML = sideHtml;
+
+            // Render Logs
+            let alertHtml = '';
+            systemAlertLogs.forEach(log => {
+                alertHtml += `<div class="notification-item"><i class="fa-solid ${log.icon}" style="color:var(--neon-pink);"></i><p style="font-size:0.85rem;">${log.text}</p></div>`;
+            });
+            document.getElementById('notifications-log-wrapper').innerHTML = alertHtml;
+
+            // Render Bookmarks
+            let bHtml = '';
+            if (activeBookmarks.length === 0) {
+                bHtml = `<p style="color:var(--text-muted); text-align:center; padding:30px; font-size:0.9rem;">No data cached inside storage clusters.</p>`;
+            } else {
+                activeBookmarks.forEach(b => {
+                    bHtml += `
+                        <div class="post-card" style="margin-bottom:10px; padding:12px; display:flex; gap:12px; align-items:center;">
+                            <img src="${b.img}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;">
+                            <div><p style="font-weight:600; font-size:0.85rem;">${b.text.substring(0, 50)}...</p></div>
+                        </div>`;
+                });
+            }
+            document.getElementById('bookmarks-cards-wrapper').innerHTML = bHtml;
+
+            // Render Timeline
+            let phtml = '';
+            activeCustomPosts.forEach(cp => {
+                phtml += `<div class="post-card"><div class="post-body-content">${cp.text}</div></div>`;
+            });
+            document.getElementById('my-personal-posts').innerHTML = phtml;
+        }
+
+        function switchTab(sid) {
+            document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active-view'));
+            document.querySelectorAll('.nav-menu li').forEach(l => l.classList.remove('active'));
+            document.getElementById(sid).classList.add('active-view');
+            
+            let map = {'feed-section':'nav-feed','explore-section':'nav-explore','alerts-section':'nav-alerts','bookmarks-section':'nav-bookmarks','profile-section':'nav-profile'};
+            if(map[sid]) document.getElementById(map[sid]).classList.add('active');
+        }
+
+        function triggerStoryPostView(title, img, text) {
+            document.getElementById('modal-content-header').innerText = title;
+            document.getElementById('modal-content-media').src = img;
+            document.getElementById('modal-content-bio').innerText = text;
+            document.getElementById('global-modal-viewer').style.display = 'flex';
+        }
+
+        function triggerProfileOverlay(name, handle, avatar, bio) {
+            document.getElementById('modal-content-header').innerText = `${name} (${handle})`;
+            document.getElementById('modal-content-media').src = avatar;
+            document.getElementById('modal-content-bio').innerText = bio;
+            document.getElementById('global-modal-viewer').style.display = 'flex';
+        }
+
+        function shutDownViewer() { document.getElementById('global-modal-viewer').style.display = 'none'; }
+
+        function toggleFollowSwitch(uid) {
+            let user = activeCreators.find(u => u.id === uid);
+            if(!user) return;
+            user.isFollowed = !user.isFollowed;
+            activeFollowingCount = user.isFollowed ? activeFollowingCount + 1 : activeFollowingCount - 1;
+            
+            setDb('nx_v9_creators', activeCreators);
+            setDb('nx_v9_fcount', activeFollowingCount);
+            compileDatabasePipes();
+            renderApplicationDOM();
+        }
+
+        function likePostAction(pid) {
+            let post = masterFeedArray.find(p => p.id === pid);
+            if(!post) return;
+            post.isLiked = !post.isLiked;
+            post.likes = post.isLiked ? post.likes + 1 : post.likes - 1;
+            renderApplicationDOM();
+        }
+
+        function bookmarkPostAction(pid) {
+            let post = masterFeedArray.find(p => p.id === pid);
+            if(!post) return;
+
+            let index = activeBookmarks.findIndex(b => b.id === pid);
+            if(index === -1) {
+                post.isBookmarked = true;
+                activeBookmarks.push(post);
+            } else {
+                post.isBookmarked = false;
+                activeBookmarks.splice(index, 1);
+            }
+            setDb('nx_v9_bookmarks', activeBookmarks);
+            compileDatabasePipes();
+            renderApplicationDOM();
+        }
+
+        function publishBroadcastLive() {
+            let txt = document.getElementById('live-broadcast-text');
+            if(!txt.value.trim()) return;
+
+            let nPost = {
+                id: `custom_${Date.now()}`,
+                category: 'fashion', // Set dynamically to fashion for testing matrix filters
+                user: { name: activeProfile.name, handle: '@umaima_luxury', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150', bio: activeProfile.bio },
+                text: txt.value,
+                img: rawUniqueImages[Math.floor(Math.random() * rawUniqueImages.length)],
+                likes: 0, isLiked: false, isBookmarked: false, tags: ["#UmaimaDesign", "#LiveCore"]
+            };
+
+            activeCustomPosts.unshift(nPost);
+            setDb('nx_v9_custom', activeCustomPosts);
+            txt.value = '';
+            compileDatabasePipes();
+            renderApplicationDOM();
+        }
+
+        function editMyIdentity() {
+            let n = prompt("Modify signature name:", activeProfile.name);
+            let b = prompt("Modify curator description bio:", activeProfile.bio);
+            if(n) activeProfile.name = n; if(b) activeProfile.bio = b;
+            setDb('nx_v9_profile', activeProfile);
+            compileDatabasePipes();
+            renderApplicationDOM();
+        }
+
+        function filterExploreMatrix(f) { renderApplicationDOM(f); }
+        
+        function runExploreSearch() {
+            let q = document.getElementById('explore-search').value.toLowerCase();
+            document.querySelectorAll('.explore-tile').forEach(t => {
+                let m = t.getAttribute('data-tag-search');
+                t.style.display = m.includes(q) ? 'block' : 'none';
+            });
+        }
+
+        // STARTUP PLATFORM
+        compileDatabasePipes();
+        renderApplicationDOM();
+    </script>
+</body>
+</html>

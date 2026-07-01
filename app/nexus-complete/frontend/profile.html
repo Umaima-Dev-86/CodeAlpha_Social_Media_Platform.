@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Vault — NEXUS</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand-logo">NEXUS</div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="feed.html"><i class="fa-solid fa-satellite-dish"></i> <span>Global Feed</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="explore.html"><i class="fa-solid fa-bolt"></i> <span>Explore Hub</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a href="profile.html"><i class="fa-solid fa-shield-halved" style="color: var(--neon-purple);"></i> <span>Profile Vault</span></a>
+                </li>
+                <li class="nav-item" style="margin-top: auto;">
+                    <a href="index.html" style="color: var(--neon-orange);"><i class="fa-solid fa-power-off"></i> <span>Disconnect</span></a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="post-card" style="text-align: center; padding: 40px 20px; background: radial-gradient(circle at top right, rgba(0,245,214,0.05), transparent), var(--bg-surface);">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300" class="avatar" style="width: 120px; height: 120px; margin: 0 auto 16px auto; border-color: var(--neon-cyan);">
+                <h2 style="color: var(--text-main); font-weight: 800; font-size: 1.8rem;" id="profile-name-string">Umaima Dev <i class="fa-solid fa-circle-check" style="color: var(--neon-cyan); margin-left:4px;"></i></h2>
+                <p style="color: var(--neon-pink); font-weight: 700; font-size: 0.95rem; margin-bottom: 16px;">@umaima_codes</p>
+                <p id="profile-bio-string" style="color: var(--text-silver); max-width: 500px; margin: 0 auto 20px auto; font-size: 1rem;">Full Stack Developer Intern | Constructing next-gen systems, performance telemetry nodes, and sleek vector layouts.</p>
+                
+                <button class="btn-secondary" style="font-size:0.85rem; padding:6px 16px; margin-bottom:20px;" onclick="modifyProfileEngine()">Edit Identity Parameters</button>
+
+                <div style="display: flex; justify-content: center; gap: 40px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                    <div>
+                        <h3 style="color: var(--text-main); font-weight: 800;">48</h3>
+                        <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform:uppercase;">Nodes</span>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--text-main); font-weight: 800;" id="global-reach-count">12.5k</h3>
+                        <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform:uppercase;">Reach</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 16px; font-weight:700;">Your Network Publications</h3>
+
+            <div class="post-card">
+                <div class="post-header">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="avatar" alt="Umaima">
+                    <div class="user-meta">
+                        <h4>Umaima Dev <span class="badge-verified">Core Admin</span></h4>
+                        <span>@umaima_codes • 1 day ago</span>
+                    </div>
+                </div>
+                <div class="post-body-content">
+                    Environment isolation matrix parameters compiled successfully. Diagnostics reporting absolute stability. 🛡️💻
+                </div>
+            </div>
+        </main>
+
+        <aside class="right-panel">
+            <div class="widget-card">
+                <h3 class="widget-title"><i class="fa-solid fa-chart-pie" style="color: var(--neon-pink);"></i> Core Telemetry</h3>
+                <div style="margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                    <span style="color: var(--text-muted); font-weight:600;">Data Bandwidth</span>
+                    <span style="color: var(--neon-cyan); font-weight: 700;">+89.2%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted); font-weight:600;">Telemetry Node</span>
+                    <span style="color: var(--neon-green); font-weight: 700;">STABLE</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        function modifyProfileEngine() {
+            let targetName = prompt("Enter new global identity name:", document.getElementById('profile-name-string').innerText.trim());
+            let targetBio = prompt("Update your ecosystem bio description:", document.getElementById('profile-bio-string').innerText.trim());
+            
+            if(targetName) document.getElementById('profile-name-string').innerHTML = `${targetName} <i class="fa-solid fa-circle-check" style="color: var(--neon-cyan); margin-left:4px;"></i>`;
+            if(targetBio) document.getElementById('profile-bio-string').innerText = targetBio;
+        }
+    </script>
+</body>
+</html>

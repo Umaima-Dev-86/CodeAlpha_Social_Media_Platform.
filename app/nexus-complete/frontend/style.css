@@ -1,0 +1,341 @@
+/* ==========================================================================
+   🌐 NEXUS WORLDWIDE ECOSYSTEM — PREMIUM PRODUCTION ENGINE CONFIG
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+:root {
+    --bg-main: #040407;
+    --bg-surface: #0a0b10;
+    --bg-surface-hover: #12141c;
+    --border-color: rgba(255, 255, 255, 0.06);
+    --border-active: rgba(124, 77, 255, 0.4);
+    
+    /* Luxury Multi-Color Palette Accents */
+    --brand-linear: linear-gradient(135deg, #00f5d4 0%, #7b2cbf 40%, #ff007f 100%);
+    --story-gradient: linear-gradient(45deg, #ff007f, #7b2cbf, #00f5d4, #ffb703);
+    
+    --neon-cyan: #00f5d4;
+    --neon-purple: #9d4edd;
+    --neon-pink: #ff007f;
+    --neon-green: #00f5d4;
+    --neon-orange: #ff6b6b;
+    --neon-yellow: #ffee32;
+    --neon-blue: #00b4d8;
+    
+    --text-main: #f8fafc;
+    --text-muted: #64748b;
+    --text-silver: #cbd5e1;
+    
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 50%;
+    
+    --glass-bg: rgba(10, 11, 16, 0.85);
+    --glass-blur: blur(24px);
+    --shadow-premium: 0 20px 40px rgba(0,0,0,0.4);
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+/* Premium Scrollbar Customizer */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 20px; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-purple); }
+
+/* ==========================================================================
+   🧱 LIQUID THREE-COLUMN GRID ARCHITECTURE
+   ========================================================================== */
+.app-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 360px;
+    max-width: 1600px;
+    margin: 0 auto;
+    gap: 32px;
+    padding: 24px;
+}
+
+/* Navigation Architecture */
+.sidebar {
+    position: sticky;
+    top: 24px;
+    height: calc(100vh - 48px);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.brand-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    background: var(--brand-linear);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 32px;
+    user-select: none;
+}
+
+.nav-menu { list-style: none; }
+.nav-item a {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--text-silver);
+    text-decoration: none;
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+    margin-bottom: 6px;
+}
+.nav-item a:hover, .nav-item.active a {
+    color: var(--text-main);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.nav-item a i { font-size: 1.2rem; transition: var(--transition-smooth); }
+.nav-item a:hover i { transform: scale(1.1); }
+
+/* ==========================================================================
+   🪐 HYPER-COLORFUL STORIES CAROUSEL MODULE
+   ========================================================================== */
+.stories-wrapper {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 24px;
+}
+.stories-container {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+}
+.stories-container::-webkit-scrollbar { display: none; }
+.story-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    min-width: 72px;
+}
+.story-ring {
+    width: 70px;
+    height: 70px;
+    border-radius: var(--radius-full);
+    padding: 3px;
+    background: var(--story-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+}
+.story-node:hover .story-ring { transform: scale(1.05) rotate(90deg); }
+.story-img { width: 100%; height: 100%; border-radius: var(--radius-full); object-fit: cover; border: 3px solid var(--bg-surface); }
+.story-node span { font-size: 0.75rem; color: var(--text-silver); font-weight: 500; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ==========================================================================
+   📝 INFINITE GLOBAL INTERACTIVE POST COMPONENT MODULE
+   ========================================================================== */
+.main-content { min-width: 0; }
+
+.create-post-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 24px;
+}
+.create-post-box textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    resize: none;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    outline: none;
+    padding: 8px 0;
+}
+.post-actions-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 14px;
+    margin-top: 10px;
+}
+
+/* Master Post Blueprint */
+.post-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: var(--transition-smooth);
+}
+.post-card:hover { border-color: var(--border-active); box-shadow: var(--shadow-premium); }
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    border: 2px solid transparent;
+}
+.user-meta h4 { font-size: 1.05rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
+.user-meta span { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+
+.badge-verified { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: #000; font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 20px; text-transform: uppercase; }
+
+.post-body-content { font-size: 1.05rem; color: #e2e8f0; margin-bottom: 16px; line-height: 1.6; }
+.tag-pill { background: rgba(255,255,255,0.03); color: var(--neon-cyan); padding: 4px 10px; border-radius: 30px; font-size: 0.8rem; display: inline-block; margin-right: 6px; margin-top: 6px; font-weight: 600; border: 1px solid rgba(255,255,255,0.01); }
+
+.post-image-attachment {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+}
+
+/* Massive Universal Control Bar */
+.interaction-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 14px;
+    margin-top: 8px;
+}
+.action-cluster { display: flex; gap: 16px; }
+.interaction-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-silver);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+}
+.interaction-btn:hover { background: rgba(255,255,255,0.04); color: var(--text-main); }
+
+/* Premium Functional Buttons */
+.btn-primary {
+    background: var(--brand-linear);
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0, 245, 212, 0.3); }
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.06); }
+
+/* ==========================================================================
+   👥 RIGHT SIDEBAR — ECOSYSTEM DATA PANEL
+   ========================================================================== */
+.right-panel { position: sticky; top: 24px; height: max-content; }
+.widget-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; }
+.widget-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+
+.user-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.user-row:last-child { margin-bottom: 0; }
+
+/* Discovery Massive Multi-Grid Layout */
+.explore-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+}
+.explore-tile {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+}
+.explore-tile img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition-smooth); }
+.explore-tile:hover img { transform: scale(1.05); }
+.tile-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.5); opacity: 0;
+    display: flex; align-items: center; justify-content: center; gap: 12px; font-weight: 700; transition: var(--transition-smooth);
+}
+.explore-tile:hover .tile-overlay { opacity: 1; }
+
+/* ==========================================================================
+   📱 SYSTEM RESPONSIVE GRID CONTROL MATRIX (MOBILE-FRIENDLY)
+   ========================================================================== */
+@media (max-width: 1200px) {
+    .app-layout { grid-template-columns: 80px 1fr; gap: 20px; padding: 16px; }
+    .right-panel, .sidebar span { display: none; }
+    .brand-logo { font-size: 1.6rem; text-align: center; margin-bottom: 24px; }
+    .nav-item a { padding: 14px; justify-content: center; }
+}
+
+@media (max-width: 768px) {
+    .app-layout { grid-template-columns: 1fr; padding: 12px 12px 80px 12px; gap: 16px; }
+    .sidebar {
+        position: fixed; bottom: 0; left: 0; top: auto;
+        width: 100%; height: 64px; background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur); border-top: 1px solid var(--border-color);
+        z-index: 1000; flex-direction: row; padding: 0 8px;
+    }
+    .brand-logo { display: none; }
+    .nav-menu { display: flex; justify-content: space-around; width: 100%; align-items: center; }
+    .nav-item a { padding: 10px; margin-bottom: 0; border: none !important; background: transparent !important; box-shadow: none !important; }
+    .nav-item.active a { color: var(--neon-cyan); }
+    .stories-wrapper { padding: 12px; border-radius: var(--radius-md); }
+    .story-ring { width: 62px; height: 62px; }
+    .post-card { padding: 16px; border-radius: var(--radius-md); }
+    .post-image-attachment { max-height: 340px; }
+    .explore-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+}
