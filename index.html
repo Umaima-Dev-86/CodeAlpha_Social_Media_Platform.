@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexus — Sign In</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Left panel — visual */
+    .auth-visual {
+      flex: 1;
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+    }
+
+    .auth-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 40%, rgba(124,90,243,0.18) 0%, transparent 65%),
+                  radial-gradient(ellipse at 75% 70%, rgba(196,122,245,0.13) 0%, transparent 55%);
+    }
+
+    .visual-orb {
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #9b7ff7, #7c5af3 50%, #4a2fbb);
+      opacity: 0.18;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -55%);
+      filter: blur(40px);
+      animation: pulse 6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -55%) scale(1); opacity: 0.18; }
+      50% { transform: translate(-50%, -55%) scale(1.1); opacity: 0.24; }
+    }
+
+    .visual-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .visual-logo {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+    }
+
+    .visual-tagline {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 320px;
+      line-height: 1.7;
+    }
+
+    .visual-cards {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .visual-post-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transform: translateX(0);
+      animation: floatCard 8s ease-in-out infinite;
+    }
+    .visual-post-card:nth-child(2) { animation-delay: 2s; }
+    .visual-post-card:nth-child(3) { animation-delay: 4s; }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translateX(0px); }
+      50% { transform: translateX(6px); }
+    }
+
+    .vcard-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .vcard-body {}
+    .vcard-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .vcard-text { font-size: 12px; color: var(--text-secondary); }
+    .vcard-likes { font-size: 11px; color: var(--like); margin-top: 6px; }
+
+    /* Right panel — auth form */
+    .auth-panel {
+      width: 420px;
+      flex-shrink: 0;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 36px;
+      overflow-y: auto;
+    }
+
+    .auth-box {
+      width: 100%;
+    }
+
+    .auth-heading {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .auth-subheading {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-full);
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 9px;
+      border: none;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .auth-tab.active {
+      background: var(--accent-gradient);
+      color: #fff;
+      box-shadow: var(--shadow-accent);
+    }
+
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+
+    .input-icon-wrap {
+      position: relative;
+    }
+    .input-icon-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .input-icon-wrap input {
+      padding-left: 42px !important;
+    }
+
+    .auth-footer {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .divider-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 20px 0;
+    }
+    .divider-text::before, .divider-text::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    @media (max-width: 768px) {
+      .auth-visual { display: none; }
+      .auth-panel { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Left Visual Panel -->
+  <div class="auth-visual">
+    <div class="visual-orb"></div>
+    <div class="visual-content">
+      <div class="visual-logo">Nexus</div>
+      <p class="visual-tagline">Connect, share moments, and discover people who inspire you.</p>
+
+      <div class="visual-cards">
+        <div class="visual-post-card">
+          <div class="avatar-placeholder avatar-sm vcard-avatar" style="font-size:14px;">A</div>
+          <div class="vcard-body">
+            <div class="vcard-name">@alex_creates</div>
+            <div class="vcard-text">Just shipped my new design system 🚀</div>
+            <div class="vcard-likes">♥ 142 likes</div>
+          </div>
+        </div>
+        <div class="visual-post-card">
+          <div class="avatar-placeholder avatar-sm vcard-avatar" style="font-size:14px; background: linear-gradient(135deg,#3ecf8e,#2ba0d4);">S</div>
+          <div class="vcard-body">
+            <div class="vcard-name">@sara_dev</div>
+            <div class="vcard-text">Learning Rust today. Brain hurts 😅</div>
+            <div class="vcard-likes">♥ 89 likes</div>
+          </div>
+        </div>
+        <div class="visual-post-card">
+          <div class="avatar-placeholder avatar-sm vcard-avatar" style="font-size:14px; background: linear-gradient(135deg,#f05d7a,#f0a35d);">M</div>
+          <div class="vcard-body">
+            <div class="vcard-name">@mia_photos</div>
+            <div class="vcard-text">Golden hour hits different 🌅</div>
+            <div class="vcard-likes">♥ 317 likes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Auth Panel -->
+  <div class="auth-panel">
+    <div class="auth-box">
+      <div class="auth-heading">Welcome back 👋</div>
+      <p class="auth-subheading">Sign in or create your account</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('register')">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="loginForm" class="auth-form active">
+        <div id="loginAlert"></div>
+        <div class="input-group">
+          <label>Username</label>
+          <div class="input-icon-wrap">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="loginUsername" placeholder="your_username" autocomplete="username" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-icon-wrap">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" />
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="handleLogin()">Sign In</button>
+        <div class="divider-text">or</div>
+        <button class="btn btn-outline btn-block" onclick="handleDemoLogin()">Continue with Demo Account</button>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="registerForm" class="auth-form">
+        <div id="registerAlert"></div>
+        <div class="input-group">
+          <label>Full Name</label>
+          <div class="input-icon-wrap">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="regName" placeholder="Your Full Name" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Username</label>
+          <div class="input-icon-wrap">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="regUsername" placeholder="unique_handle" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Email</label>
+          <div class="input-icon-wrap">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            <input type="email" id="regEmail" placeholder="you@example.com" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-icon-wrap">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="regPassword" placeholder="Min. 6 characters" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Bio <span style="color:var(--text-muted);font-size:11px;">(optional)</span></label>
+          <textarea id="regBio" placeholder="Tell us about yourself..." rows="2"></textarea>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="handleRegister()">Create Account</button>
+      </div>
+
+      <div class="auth-footer">
+        By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="app.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (NexusApp.getCurrentUser()) {
+      window.location.href = 'feed.html';
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.auth-tab').forEach((t, i) => {
+        t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1));
+      });
+      document.getElementById('loginForm').classList.toggle('active', tab === 'login');
+      document.getElementById('registerForm').classList.toggle('active', tab === 'register');
+    }
+
+    function handleLogin() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const alertEl = document.getElementById('loginAlert');
+
+      if (!username || !password) {
+        alertEl.innerHTML = '<div class="alert alert-error">Please fill in all fields.</div>';
+        return;
+      }
+
+      const result = NexusApp.login(username, password);
+      if (result.success) {
+        NexusApp.showToast('Welcome back, @' + username + '!', 'success');
+        setTimeout(() => window.location.href = 'feed.html', 700);
+      } else {
+        alertEl.innerHTML = '<div class="alert alert-error">' + result.error + '</div>';
+      }
+    }
+
+    function handleDemoLogin() {
+      const result = NexusApp.login('alex_creates', 'demo1234');
+      if (result.success) {
+        NexusApp.showToast('Logged in as demo user!', 'success');
+        setTimeout(() => window.location.href = 'feed.html', 700);
+      }
+    }
+
+    function handleRegister() {
+      const name = document.getElementById('regName').value.trim();
+      const username = document.getElementById('regUsername').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const bio = document.getElementById('regBio').value.trim();
+      const alertEl = document.getElementById('registerAlert');
+
+      if (!name || !username || !email || !password) {
+        alertEl.innerHTML = '<div class="alert alert-error">Please fill in all required fields.</div>';
+        return;
+      }
+      if (password.length < 6) {
+        alertEl.innerHTML = '<div class="alert alert-error">Password must be at least 6 characters.</div>';
+        return;
+      }
+
+      const result = NexusApp.register({ name, username, email, password, bio });
+      if (result.success) {
+        alertEl.innerHTML = '<div class="alert alert-success">Account created! Signing you in...</div>';
+        setTimeout(() => window.location.href = 'feed.html', 900);
+      } else {
+        alertEl.innerHTML = '<div class="alert alert-error">' + result.error + '</div>';
+      }
+    }
+
+    // Enter key support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (document.getElementById('loginForm').classList.contains('active')) handleLogin();
+        else handleRegister();
+      }
+    });
+  </script>
+</body>
+</html>
